@@ -32,7 +32,7 @@ def get_transferday(x,y):
                                                                                                 '%Y-%m-%d').isoweekday() == 7)
     td_df = td_df.drop(td_df[td_df['非节假日'] == False].index.values, axis=0)
     td_df = td_df.drop(td_df[td_df['周末'] == True].index.values, axis=0)
-    wday = td_df['日期'].values.tolist()[::-1]  # list倒序用法
+    wday = td_df['日期'].values.tolist()[::-1]  
 
 # 根据月份判断每月最后一个交易日
     tday = []
