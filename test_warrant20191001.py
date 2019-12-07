@@ -108,8 +108,6 @@ for bearsl in [i/10 for i in range(11,21, 1)]:
                                         sin), -1] = (singledf.iloc[
                                                          singledf.index.tolist().index(
                                                              sin), sinhigh] - 1) * bull
-
-
                             # 熊
                             if abs(singledf.iloc[singledf.index.tolist().index(sin), high] - 1) - abs(
                                     singledf.iloc[singledf.index.tolist().index(sin), low] - 1) < 0:
