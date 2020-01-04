@@ -1,19 +1,10 @@
 import pandas as pd
-import matplotlib.pyplot as plt
-import matplotlib
 import datetime as dt
-from chinese_calendar import is_workday
 import copy
 import numpy as np
-import math
-import scipy.stats as st
-import csv
-import random
-import codecs
-import threading
 import time
 start_time = time.time()
-real_df =pd.read_excel(r'C:/Users/Tao/Desktop/投资/牛熊/1001/牛熊数据计算.xlsx',sheet_name= 4)
+real_df =pd.read_excel(r'C:/Users/Tao/Desktop/投资/牛熊/1231/牛熊数据计算.xlsx',sheet_name= 4)
 real_df.set_index(real_df['日期'],inplace=True)
 real_df = real_df.drop(columns = ['日期'])
 real_df.index = real_df.index.map(lambda y : dt.datetime.strftime(y, '%Y-%m-%d'))
@@ -28,13 +19,13 @@ finalresult = pd.DataFrame(index=['highlow','high-swing','low+swing'], columns=[
                             '双边牛止盈','双边牛止损', '双边熊止盈','双边熊止损', '盈损双边模型','合并最大期望'])
 finalresult.fillna(0, inplace=True)
 
-endresult = pd.DataFrame(index=[i/10 for i in range(11,21, 1)], columns=['合并最大期望', '方向模型','单边牛止盈', '单边牛止损',
+endresult = pd.DataFrame(index=[i/10 for i in range(19,26, 1)], columns=['合并最大期望', '方向模型','单边牛止盈', '单边牛止损',
                             '单边熊止盈','单边熊止损','双边牛止盈','双边牛止损', '双边熊止盈','双边熊止损',
                                                                          '盈损单边模型','盈损双边模型'])
 endresult.fillna(0, inplace=True)
 
-for bearsl in [i/10 for i in range(11,21, 1)]:
-    num = range(11,21, 1).index(int(bearsl*10))
+for bearsl in [i/10 for i in range(19,26, 1)]:
+    num = range(19,26, 1).index(int(bearsl*10))
     finalresult.iloc[:, :] = 0
     for model in ['highlow', 'high-swing', 'low+swing']:
         singledf = pd.DataFrame(columns=real_df.columns)
@@ -48,9 +39,9 @@ for bearsl in [i/10 for i in range(11,21, 1)]:
             high = 11
             low = 6
         singledf = real_df
-        for bull in [i / 10 for i in range(11,26, 1)]:
-            for bear in [i / 10 for i in range(11,26, 1)]:
-                for bullsl in [i / 10 for i in range(11,21, 1)]:
+        for bull in [i / 10 for i in range(12,26, 1)]:
+            for bear in [i / 10 for i in range(12,26, 1)]:
+                for bullsl in [i / 10 for i in range(12,26, 1)]:
                     for sinmodel in ['highlow', 'high-swing', 'low+swing']:
                         singledf['结果'] = 0
                         # 确定单边模型
@@ -195,8 +186,5 @@ for bearsl in [i/10 for i in range(11,21, 1)]:
     endresult.iloc[num, 11] = copy.deepcopy(
         finalresult.iloc[finalresult.index.tolist().index(
             finalresult[finalresult['合并最大期望'] == endresult.iloc[num, 0]].index[0]), 11])
-endresult.to_csv(r'C:/Users/tao/Desktop/投资/牛熊/pool/牛熊结果（1001）（1.1-2.0,1.1-2.5）.csv' , index=True, encoding='utf_8_sig')
+endresult.to_csv(r'C:/Users/tao/Desktop/投资/牛熊/pool/牛熊结果（1231-2）（1.2-2.5,1.2-2.5）.csv' , index=True, encoding='utf_8_sig')
 print('运行时间%s' % (time.time() - start_time))
-
-
-
