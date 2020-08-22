@@ -4,72 +4,68 @@ from stepwise_regression import step_reg
 import numpy as np
 import math
 
-price_df = pd.read_excel(r'C:/Users/Tao/Desktop/投资/spy/0630/stoploss数据整理（以前一日收盘价为底） - 对比.xlsx',
+price_df = pd.read_excel(r'C:/Users/Tao/Desktop/投资/spy/下次用这个/stoploss数据整理（以前一日收盘价为底） - 对比.xlsx',
                          sheet_name=0).iloc[:, :]
-vol_df = pd.read_excel(r'C:/Users/Tao/Desktop/投资/spy/0630/stoploss数据整理（以前一日收盘价为底） - 对比.xlsx',
+vol_df = pd.read_excel(r'C:/Users/Tao/Desktop/投资/spy/下次用这个/stoploss数据整理（以前一日收盘价为底） - 对比.xlsx',
                        sheet_name=1).iloc[:, :]
-df_final = pd.DataFrame(index = price_df.index,columns = ['spycoe','openvarspy0','openvarspy1',
-                'openvarspy2','maxvarspy0','maxvarspy1','maxvarspy2',
-                'openvarvix0','openvarvix1','openvarvix2','maxvarvix0','maxvarvix1','maxvarvix2',
-                'openvardji0','openvardji1','openvardji2','maxvardji0','maxvardji1','maxvardji2',
-                'openvarixic0','openvarixic1','openvarixic2','maxvarixic0','maxvarixic1','maxvarixic2',
-                'openvarspx0','openvarspx1','openvarspx2','maxvarspx0','maxvarspx1','maxvarspx2',
-                'openvarhsi0','openvarhsi1','openvarhsi2','maxvarhsi0','maxvarhsi1','maxvarhsi2',
-                'openvarsh0','openvarsh1','openvarsh2','maxvarsh0','maxvarsh1','maxvarsh2',
-                'openvarsz0', 'openvarsz1', 'openvarsz2', 'maxvarsz0','maxvarsz1', 'maxvarsz2',
-                'openvarcy0', 'openvarcy1', 'openvarcy2', 'maxvarcy0','maxvarcy1', 'maxvarcy2',
-                'openvolspy0','openvolspy1','openvolspy2','maxvolspy0','maxvolspy1','maxvolspy2',
-                'openvoldji0','openvoldji1','openvoldji2','maxvoldji0','maxvoldji1','maxvoldji2',
-                'openvolixic0','openvolixic1','openvolixic2','maxvolixic0','maxvolixic1','maxvolixic2',
-                'openvolspx0','openvolspx1','openvolspx2','maxvolspx0','maxvolspx1','maxvolspx2',
-                'openvolhsi0','openvolhsi1','openvolhsi2','maxvolhsi0','maxvolhsi1','maxvolhsi2',
-                'openvolsh0','openvolsh1','openvolsh2','maxvolsh0','maxvolsh1','maxvolsh2',
-                'openvolsz0','openvolsz1','openvolsz2','maxvolsz0','maxvolsz1','maxvolsz2',
-                'openvolcy0', 'openvolcy1', 'openvolcy2', 'maxvolcy0','maxvolcy1', 'maxvolcy2',
-                'highspy','lowspy','highvix','lowvix','highdji','lowdji','highixic','lowixic','highspx','lowspx',
-                'highhsi','lowhsi','highsh','lowsh','highsz','lowsz','highcy','lowcy'])
+df_final = pd.DataFrame(index = price_df.index,columns = ['spycoe','closevarspy0','closevarspy1',
+                'closevarspy2','maxvarspy0','maxvarspy1','maxvarspy2',
+                'closevarvix0','closevarvix1','closevarvix2','maxvarvix0','maxvarvix1','maxvarvix2',
+                'closevardji0','closevardji1','closevardji2','maxvardji0','maxvardji1','maxvardji2',
+                'closevarixic0','closevarixic1','closevarixic2','maxvarixic0','maxvarixic1','maxvarixic2',
+                'closevarspx0','closevarspx1','closevarspx2','maxvarspx0','maxvarspx1','maxvarspx2',
+                'closevarhsi0','closevarhsi1','closevarhsi2','maxvarhsi0','maxvarhsi1','maxvarhsi2',
+                'closevarsh0','closevarsh1','closevarsh2','maxvarsh0','maxvarsh1','maxvarsh2',
+                'closevarsz0', 'closevarsz1', 'closevarsz2', 'maxvarsz0','maxvarsz1', 'maxvarsz2',
+                'closevarcy0', 'closevarcy1', 'closevarcy2', 'maxvarcy0','maxvarcy1', 'maxvarcy2',
+                'closevolspy0','closevolspy1','closevolspy2','maxvolspy0','maxvolspy1','maxvolspy2',
+                'closevoldji0','closevoldji1','closevoldji2','maxvoldji0','maxvoldji1','maxvoldji2',
+                'closevolixic0','closevolixic1','closevolixic2','maxvolixic0','maxvolixic1','maxvolixic2',
+                'closevolspx0','closevolspx1','closevolspx2','maxvolspx0','maxvolspx1','maxvolspx2',
+                'closevolhsi0','closevolhsi1','closevolhsi2','maxvolhsi0','maxvolhsi1','maxvolhsi2',
+                'closevolsh0','closevolsh1','closevolsh2','maxvolsh0','maxvolsh1','maxvolsh2',
+                'closevolsz0','closevolsz1','closevolsz2','maxvolsz0','maxvolsz1','maxvolsz2',
+                'closevolcy0', 'closevolcy1', 'closevolcy2', 'maxvolcy0','maxvolcy1', 'maxvolcy2'])
 df_final.fillna(0,inplace =True)
 df_final['spycoe'] = price_df.iloc[:,list(price_df.columns).index('spycoe')].values
-#美股，只有本周四前数据
-for i in ['spy','vix','dji','ixic','spx','hsi','sh','sz','cy']:
-    #分别计算最高价、最低价的波动率
-    df_final.loc[1:, 'high' + i ] = [abs(y-1) for y in list(price_df.loc[
-    1:, 'high'+i+'b'].values / price_df.loc[:len(price_df.index)-2, 'pct'+ i + 'b'].values)]
-    df_final.loc[1:, 'low' + i ] = [abs(y-1) for y in list(price_df.loc[
-    1:, 'low'+i+'b'].values / price_df.loc[:len(price_df.index)-2, 'pct'+ i + 'b'].values)]
 
-    #计算开盘价波动率
-    df_final.loc[1:,'openvar'+i+'0'] = [abs(y-1) for y in list(price_df.loc[
-    1:, 'open'+i+'b'].values / price_df.loc[:len(price_df.index)-2, 'pct'+ i + 'b'].values)]
-    df_final.loc[2:,'openvar'+i+'1'] = df_final.loc[1:,'openvar'+i+'0'].values[:-1]
-    df_final.loc[3:,'openvar'+i+'2'] = df_final.loc[1:,'openvar'+i+'0'].values[:-2]
+#美股
+for i in ['spy','vix','dji','ixic','spx','hsi','sh','sz','cy']:
+    #计算收盘价波动率
+    df_final.loc[1:,'closevar'+i+'0'] = list(price_df.loc[
+    1:, 'pct'+i+'b'].values / price_df.loc[:len(price_df.index)-2, 'pct'+ i + 'b'].values)
+    df_final.loc[2:,'closevar'+i+'1'] = df_final.loc[1:,'closevar'+i+'0'].values[:-1]
+    df_final.loc[3:,'closevar'+i+'2'] = df_final.loc[1:,'closevar'+i+'0'].values[:-2]
 
     #计算周内最大波动率
-    df_final.loc[1:,'maxvar'+i+'0'] = df_final.loc[1:,['high' + i ,'low' + i ]].max(axis =1)
+    for numi in df_final.index[1:]:
+        df_final.loc[numi, 'maxvar' + i + '0'] = price_df.loc[
+    numi, 'high'+i+'b'] / price_df.loc[numi-1, 'pct'+ i + 'b'] if price_df.loc[
+    numi, 'high'+i+'b'] + price_df.loc[numi, 'low'+i+'b'] >= 2*price_df.loc[
+    numi-1, 'pct'+i+'b'] else price_df.loc[numi, 'low'+i+'b'] / price_df.loc[numi-1, 'pct'+ i + 'b']
     df_final.loc[2:,'maxvar'+i+'1'] = df_final.loc[1:,'maxvar'+i+'0'].values[:-1]
     df_final.loc[3:,'maxvar'+i+'2'] = df_final.loc[1:,'maxvar'+i+'0'].values[:-2]
 
     if i != 'vix':
         #计算周间最后一个交易日的交易量波动率
-        df_final.loc[1:, 'openvol' + i + '0'] = vol_df.loc[
+        df_final.loc[1:, 'closevol' + i + '0'] = vol_df.loc[
                                                 1:, 'cvol' + i + '1'].values / vol_df.loc[:len(price_df.index) - 2,
                                                                                'cvol' + i + '1'].values
-        df_final.loc[2:, 'openvol' + i + '1'] = df_final.loc[1:, 'openvol' + i + '0'].values[:-1]
-        df_final.loc[3:, 'openvol' + i + '2'] = df_final.loc[1:, 'openvol' + i + '0'].values[:-2]
+        df_final.loc[2:, 'closevol' + i + '1'] = df_final.loc[1:, 'closevol' + i + '0'].values[:-1]
+        df_final.loc[3:, 'closevol' + i + '2'] = df_final.loc[1:, 'closevol' + i + '0'].values[:-2]
         #选取周内最大波动率对应交易量，作为交易量波动率
         for yy in df_final.index[1:]:
-            if df_final.loc[yy, 'maxvar' + i + '0'] == df_final.loc[yy, 'high' + i]:
+            if price_df.loc[yy, 'high'+i+'b'] + price_df.loc[yy, 'low'+i+'b'] >= 2*price_df.loc[
+                yy-1, 'pct'+i+'b']:
                 df_final.loc[yy, 'maxvol' + i + '0'] = vol_df.loc[
-                                                           yy, 'hvol' + i + '1'] / vol_df.loc[yy - 1, 'cvol' + i + '1']
+                yy, 'hvol' + i + '1'] / vol_df.loc[yy - 1, 'cvol' + i + '1']
             else:
                 df_final.loc[yy, 'maxvol' + i + '0'] = vol_df.loc[
-                                                           yy, 'lvol' + i + '1'] / vol_df.loc[yy - 1, 'cvol' + i + '1']
+                yy, 'lvol' + i + '1'] / vol_df.loc[yy - 1, 'cvol' + i + '1']
         df_final.loc[2:, 'maxvol' + i + '1'] = df_final.loc[1:, 'maxvol' + i + '0'].values[:-1]
         df_final.loc[3:, 'maxvol' + i + '2'] = df_final.loc[1:, 'maxvol' + i + '0'].values[:-2]
 
 df_final.iloc[:,1:] = df_final.iloc[:,1:].applymap(lambda y:math.log(y) if y != 0 else y)
-df_final.drop(['highspy','lowspy','highvix','lowvix','highdji','lowdji','highixic','lowixic','highspx','lowspx',
-               'highhsi','lowhsi','highsh','lowsh','highsz','lowsz','highcy','lowcy'],axis=1,inplace = True)
 
 df_final.to_csv(r'C:/Users/Tao/Desktop/投资/spy/stoploss检查用111.csv', index=False, encoding='utf_8_sig')
 
