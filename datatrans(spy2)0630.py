@@ -14,7 +14,7 @@ import threading
 import time
 
 
-daily_df = pd.read_excel(r'C:/Users/Tao/Desktop/投资/spy/0630/日数据.xlsx',sheet_name=0)
+daily_df = pd.read_excel(r'C:/Users/Tao/Desktop/投资/spy/下次用这个/日数据.xlsx',sheet_name=0)
 daily_df.set_index('Date', inplace=True)
 
 #周五
@@ -23,18 +23,12 @@ tradedf =  daily_df.resample('W', label='right').last()
 tradedf.High = daily_df.High.resample('W', label='right').max().values
 tradedf.Low = daily_df.Low.resample('W', label='right').min().values
 
-final_df = pd.DataFrame(index = tradedf.index[:-1].values,columns = ['coe'])
-final_df.coe = [ math.log(i) for i in list(tradedf.iloc[1:,0].values/tradedf.iloc[:-1,4].values)]
-
-final_df['volcoe'] = [math.log(abs(i-1)) if i != 1 else 0 for i in
-                   list(tradedf.iloc[1:,0].values/tradedf.iloc[:-1,3].values)]
-
-final_df['hvol'] =[abs(i-1) for i in list(tradedf.iloc[1:,1].values/tradedf.iloc[:-1,3].values)]
-final_df['lvol'] =[abs(i-1) for i in list(tradedf.iloc[1:,2].values/tradedf.iloc[:-1,3].values)]
+final_df = pd.DataFrame(index = tradedf.index[:-1].values,columns = ['slvol'])
 final_df['slvol'] = 0
-for i in range(0,len(final_df.index),1):
-    final_df.iloc[i,-1] = math.log(final_df.iloc[i,-3]) if \
-        final_df.iloc[i,-3]>final_df.iloc[i,-2] else math.log(final_df.iloc[i,-2])
+
+for i in range(0,len(final_df.index)):
+    final_df.iloc[i,0] = math.log(tradedf.iloc[i+1,1]/tradedf.iloc[i,3]) if tradedf.iloc[i+1,1]+ tradedf.iloc[
+    i+1,2] >= 2*tradedf.iloc[i,3]  else math.log(tradedf.iloc[i+1,2]/tradedf.iloc[i,3])
 #volcoe 下周开盘价波动，svol周内最大波动
-final_df[['coe','volcoe','slvol']].to_csv(
-    r'C:/Users/Tao/Desktop/投资/spy/0630/spy系数(分母全部换为下单前一日收盘价）.csv', index=True, encoding='utf_8_sig')
+final_df.to_csv(
+    r'C:/Users/Tao/Desktop/投资/spy/下次用这个/spy系数(分母全部换为下单前一日收盘价）.csv', index=True, encoding='utf_8_sig')
